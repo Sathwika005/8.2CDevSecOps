@@ -52,19 +52,15 @@ pipeline {
     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
         set -e
-
-        # Ensure lcov path exists (project may not generate coverage by default)
         mkdir -p coverage
         [ -f coverage/lcov.info ] || touch coverage/lcov.info
 
-        # Run scanner installed on the machine (Homebrew)
-        export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
-        sonar-scanner \
-          -Dsonar.token="$SONAR_TOKEN"
+        npx --yes @sonar/scan -Dsonar.token=$SONAR_TOKEN
       '''
     }
   }
 }
+
 
 
 
