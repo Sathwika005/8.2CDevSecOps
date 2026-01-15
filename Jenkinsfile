@@ -57,21 +57,16 @@ pipeline {
         mkdir -p coverage
         [ -f coverage/lcov.info ] || touch coverage/lcov.info
 
-        # Download SonarScanner (macOS)
-        SCANNER_VERSION="6.2.1.4610"
-        SCANNER_ZIP="sonar-scanner-cli-${SCANNER_VERSION}-macosx.zip"
-        SCANNER_DIR="sonar-scanner-${SCANNER_VERSION}-macosx"
-
-        rm -rf "$SCANNER_DIR" "$SCANNER_ZIP"
-        curl -sSLo "$SCANNER_ZIP" "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/${SCANNER_ZIP}"
-        unzip -q "$SCANNER_ZIP"
-
-        export PATH="$PWD/$SCANNER_DIR/bin:$PATH"
-        sonar-scanner
+        # Run scanner installed on the machine (Homebrew)
+        export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+        sonar-scanner \
+          -Dsonar.token="$SONAR_TOKEN"
       '''
     }
   }
 }
+
+
 
   }
 }
