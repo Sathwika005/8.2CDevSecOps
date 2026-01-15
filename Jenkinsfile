@@ -58,21 +58,12 @@ pipeline {
   steps {
     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
-        set -e
-        echo "Workspace: $(pwd)"
-        ls -la
-        echo "Checking sonar properties file:"
-        ls -la sonar-project.properties
-
-        # Ensure coverage file exists (your project may not generate it)
-        mkdir -p coverage
-        [ -f coverage/lcov.info ] || touch coverage/lcov.info
-
-        # Ensure Homebrew tools + Java are visible to Jenkins
-        export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
         export JAVA_HOME="/opt/homebrew/opt/openjdk"
 
-        /opt/homebrew/bin/sonar-scanner -Dsonar.token="$SONAR_TOKEN"
+        ls -la sonar-project.properties
+
+        sonar-scanner -Dsonar.token=$SONAR_TOKEN
       '''
     }
   }
