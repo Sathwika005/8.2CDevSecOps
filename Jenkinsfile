@@ -72,7 +72,7 @@ pipeline {
 
     stage('SonarCloud Analysis') {
   steps {
-    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+    withCredentials([string(credentialsId: 'SONAR-TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
         set -e
         cd nodejs-goof   # <-- only if your app is in this subfolder
