@@ -49,32 +49,19 @@ pipeline {
     }
 
     stage('SonarCloud Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-          sh '''
-            set -e
+  steps {
+    withCredentials([string(credentialsId: 'sonarcloud-token-82c', variable: 'SONAR_TOKEN')]) {
+      sh '''
+        set -e
+        mkdir -p coverage
+        [ -f coverage/lcov.info ] || touch coverage/lcov.info
 
-            # Ensure lcov path exists (project may not generate coverage by default)
-            mkdir -p coverage
-            [ -f coverage/lcov.info ] || touch coverage/lcov.info
-
-            # Download SonarScanner (macOS) - IMPORTANT: -L follows redirects
-            SCANNER_VERSION="6.2.1.4610"
-            SCANNER_ZIP="sonar-scanner-cli-${SCANNER_VERSION}-macosx.zip"
-            SCANNER_DIR="sonar-scanner-${SCANNER_VERSION}-macosx"
-
-            rm -rf "$SCANNER_DIR" "$SCANNER_ZIP"
-            curl -sSLo "$SCANNER_ZIP" -L "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/${SCANNER_ZIP}"
-            unzip -q "$SCANNER_ZIP"
-
-            export PATH="$PWD/$SCANNER_DIR/bin:$PATH"
-
-            # Run analysis (sonar-project.properties is read automatically from repo root)
-            sonar-scanner -Dsonar.token="$SONAR_TOKEN"
-          '''
-        }
-      }
+        /opt/homebrew/bin/sonar-scanner -Dsonar.token=$SONAR_TOKEN
+      '''
     }
+  }
+}
+
 
   }
 }
