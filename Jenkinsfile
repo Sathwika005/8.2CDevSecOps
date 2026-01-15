@@ -26,12 +26,18 @@ pipeline {
       }
     }
 
-    stage('Run Tests') {
-      steps {
-        // nodejs-goof uses "snyk test" which requires auth; do not fail the pipeline
-        sh 'npm test || true'
-      }
+    stage('Run Tests (Snyk)') {
+  steps {
+    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN')]) {
+      sh '''
+        export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+        export SNYK_TOKEN="$SNYK_TOKEN"
+        npm test || true
+      '''
     }
+  }
+}
+
 
     stage('Generate Coverage Report') {
       steps {
