@@ -75,16 +75,8 @@ pipeline {
     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
         set -e
-
-        echo "=== SonarCloud Analysis (local Jenkins) ==="
-        command -v sonar-scanner >/dev/null 2>&1 || {
-          echo "sonar-scanner not found. Install it on the Jenkins machine using: brew install sonar-scanner"
-          exit 1
-        }
-
-        sonar-scanner \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login="$SONAR_TOKEN"
+        cd nodejs-goof   # <-- only if your app is in this subfolder
+        sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.token="$SONAR_TOKEN"
       '''
     }
   }
