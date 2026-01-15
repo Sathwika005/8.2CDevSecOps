@@ -42,21 +42,6 @@ pipeline {
       }
     }
 
-    stage('SonarCloud Analysis') {
-  steps {
-    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-      sh '''
-        export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
-        export JAVA_HOME="/opt/homebrew/opt/openjdk"
-
-        ls -la sonar-project.properties
-
-        sonar-scanner -Dsonar.token=$SONAR_TOKEN
-      '''
-    }
-  }
-}
-
 
 
   }
