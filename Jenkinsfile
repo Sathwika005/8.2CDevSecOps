@@ -69,18 +69,33 @@ pipeline {
         sh 'npm audit || true'
       }
     }
-
-    stage('SonarCloud Analysis') {
+stage('SonarCloud Analysis') {
   steps {
     withCredentials([string(credentialsId: 'SONAR-TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
         set -e
-        cd nodejs-goof   # <-- only if your app is in this subfolder
-        sonar-scanner -Dsonar.host.url=https://sonarcloud.io -Dsonar.token="$SONAR_TOKEN"
+        echo "WORKSPACE: $(pwd)"
+        ls -la
+
+        # Only cd if the folder exists
+        if [ -d "nodejs-goof" ]; then
+          cd nodejs-goof
+        fi
+
+        echo "RUNNING SONAR IN: $(pwd)"
+        ls -la
+
+        sonar-scanner \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.projectKey=Sathwika005_8.2CDevSecOps \
+          -Dsonar.organization=sathwika005 \
+          -Dsonar.token="$SONAR_TOKEN" \
+          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
       '''
     }
   }
 }
+
 
   }
 }
