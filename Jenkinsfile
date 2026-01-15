@@ -50,7 +50,7 @@ pipeline {
 
     stage('SonarCloud Analysis') {
   steps {
-    withCredentials([string(credentialsId: 'sonarcloud-token-82c', variable: 'SONAR_TOKEN')]) {
+    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
       sh '''
         set -e
         mkdir -p coverage
